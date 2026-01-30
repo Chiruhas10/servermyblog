@@ -21,9 +21,29 @@ blogRouting.get('/Blogs', async (req, res) => {
     }
 })
 
-blogRouting.post('/Blogs', async (req, res) => {
+blogRouting.post('/Blogs', verifyToken, async (req, res) => {
     try {
-        const sdata = new blog(req.body);
+        const {
+            title,
+            author,
+            category,
+            description,
+            image,
+            bio
+        } = req.body;
+        const sdata = new blog({
+            title: title,
+            author: author,
+            category: category,
+
+            // IMPORTANT FIXES 👇
+            content: description,     // content is REQUIRED
+            authorId: req.user.id,    // authorId is REQUIRED
+
+            image: image,
+            bio: bio,
+            date: new Date().toISOString()
+        });
         const result = await sdata.save();
         if (result._id) {
             res.status(201).json({ message: "Blog added successfully" });
