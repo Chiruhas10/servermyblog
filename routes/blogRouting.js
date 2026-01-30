@@ -1,5 +1,6 @@
 const express = require('express');
 const blog = require('../models/blogModel')
+const loginMiddleware = require('../middleware/loginMiddleware');
 
 const blogRouting = express.Router();
 
@@ -21,7 +22,7 @@ blogRouting.get('/Blogs', async (req, res) => {
     }
 })
 
-blogRouting.post('/Blogs', verifyToken, async (req, res) => {
+blogRouting.post('/Blogs', loginMiddleware, async (req, res) => {
     try {
         const {
             title,
