@@ -1,6 +1,7 @@
 const express = require('express');
 const blog = require('../models/blogModel')
 const loginMiddleware = require('../middleware/loginMiddleware');
+const mongoose = require('mongoose');
 
 const blogRouting = express.Router();
 
@@ -10,17 +11,12 @@ const blogRouting = express.Router();
 blogRouting.get('/Blogs', async (req, res) => {
     try {
         const sdata = await blog.find();
-        if (sdata.length > 0) {
-            res.status(200).send(sdata);
-        }
-        else {
-            res.status(404).send("No blogs found");
-        }
+        res.status(200).json(sdata); // ✅ always return 200
     }
     catch (err) {
-        res.send(err)
+        res.status(500).json({ error: err.message });
     }
-})
+});
 
 blogRouting.post('/Blogs', loginMiddleware, async (req, res) => {
     try {
@@ -39,7 +35,7 @@ blogRouting.post('/Blogs', loginMiddleware, async (req, res) => {
 
             // IMPORTANT FIXES 👇
             content: description,     // content is REQUIRED
-            authorId: req.user.id,    // authorId is REQUIRED
+            authorId: new mongoose.Types.ObjectId(req.user.id),    // authorId is REQUIRED
 
             image: image,
             bio: bio,
@@ -72,24 +68,6 @@ blogRouting.delete('/Blogs/:bid', async (req, res) => {
     }
     catch (err) {
         res.status(500).json({ message: "Internal server error", error: err.message })
-    }
-})
-
-blogRouting.get('/Blogs/:bid', async (req, res) => {
-    try {
-        const bid = req.params.bid;
-        const sdata = await blog.findOne({ _id: bid });
-        if (sdata) {
-            res.status(200).send(sdata);
-        }
-        else {
-            res.status(404).json({ message: "Blog not found" });
-        }
-
-    }
-    catch (err) {
-        res.status(500).json({ message: "Internal server error", error: err.message })
-
     }
 })
 
