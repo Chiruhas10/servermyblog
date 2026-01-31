@@ -18,7 +18,7 @@ blogRouting.get('/Blogs', async (req, res) => {
     }
 });
 
-blogRouting.post('/Blogs', loginMiddleware, async (req, res) => {
+blogRouting.post('/Blogs', async (req, res) => {
     try {
         const {
             title,
