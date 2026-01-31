@@ -6,13 +6,12 @@ const blogSchema = new mongoose.Schema(
     author: { type: String, required: true },
     category: { type: String, required: true },
     description: String,
-    content: { type: String, required: true },
+    content: { type: String },
     image: String,
     date: String,
     bio: String,
     authorId: {
       type: mongoose.Schema.Types.ObjectId,
-      required: false
     },
     comments: [
       {
