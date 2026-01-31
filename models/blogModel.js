@@ -12,7 +12,7 @@ const blogSchema = new mongoose.Schema(
     bio: String,
     authorId: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true
+      required: false
     },
     comments: [
       {
